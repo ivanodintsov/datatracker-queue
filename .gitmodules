@@ -1,0 +1,3 @@
+[submodule "datatracker-queue-app/common/datatracker-common-request-models"]
+	path = datatracker-queue-app/common/datatracker-common-request-models
+	url = git@github.com:ivanodintsov/datatracker-common-request-models.git
