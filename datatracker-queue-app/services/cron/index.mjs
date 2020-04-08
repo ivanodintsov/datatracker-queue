@@ -1,11 +1,11 @@
 import cron from 'cron';
 import * as R from 'ramda';
-import { chatsQueue, chatsStatisticsQueue } from './bee';
-import api, { notUpdatedChatsQuery } from './api';
+import { chatsQueue, chatsStatisticsQueue } from '../bee';
+import api, { notUpdatedChatsQuery } from '../api';
 
 const { CronJob } = cron;
 
-const updateChats = async () => {
+export const updateChats = async () => {
   const { notUpdatedChats } = await api.request(notUpdatedChatsQuery, { days: 1, limit: 1 });
 
   R.forEach(chat => {

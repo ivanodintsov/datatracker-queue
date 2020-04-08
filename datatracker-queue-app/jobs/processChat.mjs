@@ -1,8 +1,10 @@
 import * as R from 'ramda';
 import moment from 'moment-timezone';
+import Transformer from 'class-transformer';
 import telegram from '../services/telegram';
 import { uploadToChatAlbum } from '../services/imgur';
 import api, { updateChatMutation, createDailyStatistics } from '../services/api';
+import { Chat } from '../services/api/requests';
 import { assocIsNotNill } from '../helpers/ramda';
 
 const uploadChatPhoto = async (fileId) => {
@@ -40,16 +42,17 @@ const processChatPhoto = async (job) => {
   const { data } = job;
 
   try {
-    const [ chat, membersCount ] = await Promise.all([
+    const [ chatResponse, membersCount ] = await Promise.all([
       telegram.getChat(data.id),
       getChatMembersCount(data.id)
     ]);
+    const chat = Transformer.plainToClass(Chat, chatResponse);
     const today = moment().startOf('day').toISOString();
     const update = R.pipe(
       R.pick(['title', 'description']),
       R.assoc('cron_updated_at', today),
       assocIsNotNill('members_count', membersCount),
-      assocIsNotNill('photo', await updateChangedPhoto(data, chat)),
+      assocIsNotNill('photo', await updateChangedPhoto(data, chatResponse)),
     )(chat);
 
     await Promise.all([

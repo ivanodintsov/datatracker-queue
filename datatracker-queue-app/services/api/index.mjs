@@ -1,5 +1,5 @@
 import graphQLClient from 'graphql-request';
-import { API_URL, API_TOKEN } from '../config';
+import { API_URL, API_TOKEN } from '../../config';
 
 const graphQLApi = new graphQLClient.GraphQLClient(API_URL, {
   credentials: 'include',
