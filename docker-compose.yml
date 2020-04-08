@@ -1,0 +1,37 @@
+version: "3"
+
+services:
+  datatracker-queue-app:
+    image: node:10.11.0-alpine
+    tty: true
+    env_file: .env
+    environment:
+      - NODE_ENV=production
+    stdin_open: true
+    restart: always
+    volumes:
+      - ./datatracker-queue-app:/usr/src/app
+    command: "/bin/sh -c 'cd /usr/src/app && npm i && npm run start:dev'"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.20'
+          memory: 500M
+    links:
+      - datatracker-redis
+    depends_on:
+      - datatracker-redis
+  
+  datatracker-redis:
+    image: redis:5.0.3-alpine
+    tty: true
+    env_file: .env
+    stdin_open: true
+    restart: always
+    volumes:
+      - ./redis/data:/data
+    deploy:
+      resources:
+        limits:
+          cpus: '0.20'
+          memory: 500M
