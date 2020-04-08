@@ -21,6 +21,7 @@
     "moment-timezone": "^0.5.23",
     "nodemon": "^1.18.10",
     "ramda": "^0.26.1",
+    "reflect-metadata": "^0.1.13",
     "telegraf": "^3.27.1"
   }
 }
