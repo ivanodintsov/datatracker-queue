@@ -1,3 +1,3 @@
-import { updateChats } from './cron';
+import { updateChats } from './index';
 
 updateChats();
