@@ -46,18 +46,19 @@ const processChatPhoto = async (job) => {
       telegram.getChat(data.id),
       getChatMembersCount(data.id)
     ]);
-    const chat = Transformer.plainToClass(Chat, chatResponse);
     const today = moment().startOf('day').toISOString();
     const update = R.pipe(
       R.pick(['title', 'description']),
       R.assoc('cron_updated_at', today),
       assocIsNotNill('members_count', membersCount),
       assocIsNotNill('photo', await updateChangedPhoto(data, chatResponse)),
-    )(chat);
+    )(chatResponse);
+
+    const chat = Transformer.plainToClass(Chat, update);
 
     await Promise.all([
-      api.request(createDailyStatistics, { id: chat.id, date: today }),
-      api.request(updateChatMutation, { id: chat.id, input: update }),
+      api.request(createDailyStatistics, { id: data.id, date: today }),
+      api.request(updateChatMutation, { id: data.id, input: chat }),
     ]);
     
     return Promise.resolve(job.id);
